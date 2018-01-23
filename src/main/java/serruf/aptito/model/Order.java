@@ -16,6 +16,10 @@ public class Order {
 
     private int amount;
 
+    /* заказ считается завершенным если он оплачен */
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean completed = false;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<Transaction> transactions = new HashSet<>();
 
@@ -42,4 +46,6 @@ public class Order {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Boolean getComplete() { return completed; }
 }
