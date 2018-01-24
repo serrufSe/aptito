@@ -1,5 +1,7 @@
 package serruf.aptito.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -12,6 +14,8 @@ import serruf.aptito.repository.TransactionRepository;
 
 @Service
 public class TransactionService {
+
+    private static final Logger log = LoggerFactory.getLogger(TransactionService.class.getName());
 
     private final OrderRepository orderRepository;
     private final TransactionRepository transactionRepository;
@@ -28,6 +32,8 @@ public class TransactionService {
 
         transaction.setOrder(order);
 
+        log.info("Start transaction " + transaction);
+
         if (order.getComplete()) {
             throw new OverpaymentError();
         }
@@ -39,8 +45,12 @@ public class TransactionService {
         } else {
             transactionRepository.save(transaction);
 
+            log.info("Finish transaction " + transaction);
+
             if (transaction.getAmount() == needToPay) {
                 order.setCompleted(true);
+
+                log.info("Complete order " + order.getId());
                 orderRepository.save(order);
             }
         }

@@ -1,5 +1,7 @@
 package serruf.aptito.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,8 @@ public class OrderController {
     private final OrderRepository orderRepository;
     private final OrderService orderService;
 
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class.getName());
+
     @Autowired
     public OrderController(OrderRepository orderRepository, OrderService orderService) {
         this.orderRepository = orderRepository;
@@ -26,6 +30,7 @@ public class OrderController {
 
     @RequestMapping(path = "/order", method = RequestMethod.POST)
     public Order create(@RequestBody Order order) {
+        log.info("Create order " + order);
         return orderRepository.save(order);
     }
 
@@ -33,6 +38,8 @@ public class OrderController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable("orderId") Long orderId, @RequestBody Order order) {
         order.setId(orderId);
+
+        log.info("Update order " + order);
 
         orderService.updateOrder(order);
     }

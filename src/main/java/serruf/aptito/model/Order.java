@@ -50,4 +50,9 @@ public class Order {
     public Boolean getComplete() { return completed; }
 
     public void setCompleted(Boolean completed) { this.completed = completed; }
+
+    @Override
+    public String toString() {
+        return String.format("Order[amount=%d, name=%s]", amount, name);
+    }
 }
