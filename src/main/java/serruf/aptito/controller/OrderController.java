@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import serruf.aptito.model.Order;
 import serruf.aptito.repository.OrderRepository;
+import serruf.aptito.service.OrderService;
 import serruf.aptito.specification.OrderSpecification;
 
 import java.util.List;
@@ -15,10 +16,12 @@ import java.util.List;
 public class OrderController {
 
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository) {
+    public OrderController(OrderRepository orderRepository, OrderService orderService) {
         this.orderRepository = orderRepository;
+        this.orderService = orderService;
     }
 
     @RequestMapping(path = "/order", method = RequestMethod.POST)
@@ -31,7 +34,7 @@ public class OrderController {
     public void update(@PathVariable("orderId") Long orderId, @RequestBody Order order) {
         order.setId(orderId);
 
-        orderRepository.save(order);
+        orderService.updateOrder(order);
     }
 
     @RequestMapping(path = "/orders")
