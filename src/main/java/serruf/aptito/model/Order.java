@@ -48,4 +48,6 @@ public class Order {
     }
 
     public Boolean getComplete() { return completed; }
+
+    public void setCompleted(Boolean completed) { this.completed = completed; }
 }
