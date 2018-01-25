@@ -1,6 +1,7 @@
 package serruf.aptito.integration.web.controller;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import org.junit.Test;
@@ -18,7 +19,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.test.web.servlet.MockMvc;
 
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,5 +42,35 @@ public class OrderControllerTest {
                 .content("{\"name\": \"test\", \"amount\": 666}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DatabaseSetup("order/update/setup.xml")
+    @ExpectedDatabase(value = "order/update/decline.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+    public void shouldUpdateNotPayedOrder() throws Exception {
+        mockMvc.perform(patch("/order/1")
+                .content("{\"name\": \"new_name\", \"amount\": 100}")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DatabaseSetup("order/update/setup.xml")
+    @ExpectedDatabase(value = "order/update/complete.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+    public void shouldUpdateAndCompleteOrder() throws Exception
+    {
+        mockMvc.perform(patch("/order/2")
+                .content("{\"name\": \"new_name\", \"amount\": 100}")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DatabaseSetup("order/update/setup.xml")
+    public void shouldReturnBadRequest() throws Exception {
+        mockMvc.perform(patch("/order/3")
+                .content("{\"name\": \"new_name\", \"amount\": 100}")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
     }
 }
