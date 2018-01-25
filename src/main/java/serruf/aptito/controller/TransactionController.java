@@ -9,6 +9,8 @@ import serruf.aptito.repository.TransactionRepository;
 import serruf.aptito.service.TransactionService;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -35,13 +37,17 @@ public class TransactionController {
     }
 
     @RequestMapping(path = "/order/{orderId}/rest")
-    public int rest(@PathVariable("orderId") Long orderId) {
-        return transactionRepository.getRestSum(orderId);
+    public Map<String, Integer> rest(@PathVariable("orderId") Long orderId) {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("rest", transactionRepository.getRestSum(orderId));
+        return map;
     }
 
     @RequestMapping(path = "/statistics")
-    public int statistics(@RequestParam(name = "statDate") @DateTimeFormat(pattern="yyyy-MM-dd") Date statDate,
+    public Map<String, Integer>  statistics(@RequestParam(name = "startDate") @DateTimeFormat(pattern="yyyy-MM-dd") Date statDate,
                           @RequestParam(name = "endDate") @DateTimeFormat(pattern="yyyy-MM-dd") Date endDate) {
-        return transactionRepository.getSumByPeriod(statDate, endDate);
+        Map<String, Integer> map = new HashMap<>();
+        map.put("sum", transactionRepository.getSumByPeriod(statDate, endDate));
+        return map;
     }
 }
