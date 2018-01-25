@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <aptito_order id="1" name="test" amount="200" completed="0"/>
+    <aptito_order id="2" name="test" amount="300" completed="0"/>
+    <transaction id="1" amount="100" order_id="2"/>
+    <transaction id="2" amount="100" order_id="1"/>
+</dataset>
