@@ -1,5 +1,7 @@
 package serruf.aptito.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +20,7 @@ public class Order {
 
     /* заказ считается завершенным если он оплачен */
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @JsonIgnore
     private Boolean completed = false;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
